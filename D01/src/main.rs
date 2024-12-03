@@ -5,7 +5,7 @@ fn get_input() -> Vec<Vec<u64>> {
     let contents = fs::read_to_string("./D01/input.txt")
         .expect("File exists.");
 
-    return contents.replace("\r\n", "")
+    return contents.replace("\r\n", "\n")
         .split("\n")
         .map(|i|String::from(i).split("   ").map(|x: &str| x.parse().expect("Not number.")).collect())
         .collect();

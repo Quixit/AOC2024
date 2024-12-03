@@ -23,6 +23,25 @@
             "cwd": "${workspaceFolder}"
             
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'D02'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=D02",
+                    "--package=D02"
+                ],
+                "filter": {
+                    "name": "D02",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+            
+        },
     ],
     
 }
