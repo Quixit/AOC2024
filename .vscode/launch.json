@@ -42,6 +42,25 @@
             "cwd": "${workspaceFolder}"
             
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'D03'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=D03",
+                    "--package=D03"
+                ],
+                "filter": {
+                    "name": "D03",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+            
+        },
     ],
     
 }
