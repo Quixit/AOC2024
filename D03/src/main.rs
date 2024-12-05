@@ -32,7 +32,7 @@ fn main() {
                 for x in i..input.len()
                 {
                     match input[x] {
-                        '0'..'9' => {
+                        '0'..':' => {
                             op1.push(input[x]);
                         },
                         ',' => {
@@ -51,7 +51,7 @@ fn main() {
                     for x in i..input.len()
                     {
                         match input[x] {
-                            '0'..'9' => {
+                            '0'..':' => {
                                 op2.push(input[x]);
                             },
                             ')' => {
