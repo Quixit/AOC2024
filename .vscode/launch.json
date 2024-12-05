@@ -21,7 +21,6 @@
             },
             "args": [],
             "cwd": "${workspaceFolder}"
-            
         },
         {
             "type": "lldb",
@@ -40,7 +39,6 @@
             },
             "args": [],
             "cwd": "${workspaceFolder}"
-            
         },
         {
             "type": "lldb",
@@ -59,7 +57,24 @@
             },
             "args": [],
             "cwd": "${workspaceFolder}"
-            
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'D04'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=D04",
+                    "--package=D04"
+                ],
+                "filter": {
+                    "name": "D04",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
         },
     ],
     
