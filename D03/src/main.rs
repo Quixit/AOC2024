@@ -11,18 +11,15 @@ fn get_input() -> String {
 fn main() {
     let input: Vec<char> = get_input().chars().collect();
     let mut sum:u64 = 0;
+    let mut activesum:u64 = 0;
+    let mut active = true;
 
     for mut i in 0..input.len() {
         if input[i] == 'm' && i < input.len() - 4 {
             let slice = &input[i..i+4];
             let slice: String = slice.into_iter().collect();
 
-            let operation = match slice.as_str() {
-                "mul(" => Some("mul"),
-                _ => None,
-            };
-
-            if operation != None
+            if slice.as_str() == "mul("
             {
                 i += 4;
 
@@ -69,15 +66,35 @@ fn main() {
                         let one: u64 = op1.parse().unwrap();
                         let two: u64 = op2.parse().unwrap();
 
-                        if operation.is_some_and(|x| x == "mul")
-                        {
-                            sum += one * two;
+                        sum += one * two;
+
+                        if active {
+                            activesum += one * two;
                         }
                     }
                 }
             }
         }
+
+        if input[i] == 'd' && i < input.len() - 4 {
+            let do_slice = &input[i..i+4];
+            let do_slice: String = do_slice.into_iter().collect();
+
+            if do_slice.as_str() == "do()"
+            {
+                active = true;
+            }
+
+            let dont_slice = &input[i..i+7];
+            let dont_slice: String = dont_slice.into_iter().collect();
+
+            if dont_slice.as_str() == "don't()"
+            {
+                active = false;
+            }
+        }
     }
 
     println!("Result: {sum}");
+    println!("Active Result: {activesum}");
 }
