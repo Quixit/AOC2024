@@ -41,37 +41,42 @@ fn get_input() -> (HashMap<u64,Vec<u64>>, Vec<Vec<u64>>) {
 fn main() {
     let (order_map, data) = get_input();
     let mut sum:u64 = 0;
-    let mut invalid_data: Vec<Vec<u64>> = Vec::new();
+    let mut invalid_sum: u64 = 0;
 
-    for line in data {
-        let mut set: HashSet<u64> = HashSet::new(); 
+    for mut line in data {
+        let mut set: HashMap<u64, usize> = HashMap::new(); 
         let mut valid = true;
-        for i in 0..line.len() {
-            let order = order_map.get(&line[i]);
 
+        for mut i in 0..line.len() {
+            let order = order_map.get(&line[i]);
+            let mut reset = false;
             if order != None
             {
-                for after in order.unwrap()
+                let order = order.unwrap();
+                for after in order
                 {
-                    if set.contains(after) && valid {
+                    if set.contains_key(&after) {
                         valid = false;
-                        invalid_data.push(line.clone());
+
+                        line.swap(i, *set.get(&after).unwrap());
+                        i = 0;
+                        set.clear();
+                        reset = true;
                     }
                 }
             }
 
-            if !valid {
-                break;
-            }
+            set.insert(line[i], i);
+        }
 
-            set.insert(line[i]);
-
-            if i == line.len() -1 {
-                //passed
-                sum += line[line.len()/2];
-            }
+        if valid {
+            sum += line[line.len()/2];
+        } else {
+            invalid_sum += line[line.len()/2];
+            println!("{invalid_sum}");
         }
     }
 
-    println!("Middle Sum: {sum}");
+    println!("Valid Sum: {sum}");
+    println!("Invalid Sum: {invalid_sum}");
 }
