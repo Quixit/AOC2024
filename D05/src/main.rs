@@ -1,5 +1,4 @@
-use std::{collections::{HashMap, HashSet}, fs};
-// use std::collections::HashMap;
+use std::{collections::HashMap, fs};
 
 fn get_input() -> (HashMap<u64,Vec<u64>>, Vec<Vec<u64>>) {
     let contents = fs::read_to_string("./D05/input.txt")
@@ -47,9 +46,13 @@ fn main() {
         let mut set: HashMap<u64, usize> = HashMap::new(); 
         let mut valid = true;
 
-        for mut i in 0..line.len() {
+        let mut i:usize = 0;
+
+        while i < line.len() {
+            
+
             let order = order_map.get(&line[i]);
-            let mut reset = false;
+
             if order != None
             {
                 let order = order.unwrap();
@@ -59,21 +62,22 @@ fn main() {
                         valid = false;
 
                         line.swap(i, *set.get(&after).unwrap());
+
                         i = 0;
                         set.clear();
-                        reset = true;
+                        continue;
                     }
                 }
             }
 
             set.insert(line[i], i);
+            i += 1;
         }
 
         if valid {
             sum += line[line.len()/2];
         } else {
             invalid_sum += line[line.len()/2];
-            println!("{invalid_sum}");
         }
     }
 
