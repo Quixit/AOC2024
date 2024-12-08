@@ -112,6 +112,42 @@
             "args": [],
             "cwd": "${workspaceFolder}"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'D07'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=D07",
+                    "--package=D76"
+                ],
+                "filter": {
+                    "name": "D07",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'D08'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=D08",
+                    "--package=D08"
+                ],
+                "filter": {
+                    "name": "D08",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ],
     
 }
