@@ -94,6 +94,24 @@
             "args": [],
             "cwd": "${workspaceFolder}"
         },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'D06'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=D06",
+                    "--package=D06"
+                ],
+                "filter": {
+                    "name": "D06",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
     ],
     
 }
