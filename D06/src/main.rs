@@ -40,37 +40,78 @@ fn get_input() -> (Vec<Vec<bool>>, usize, usize) {
 
 
 fn main() {
-    let (map, mut x, mut y) = get_input();
+    let (map, x_in, y_in) = get_input();      
+    let (cycle, visited) = simulate(&map, &x_in, &y_in);
+
+    if cycle {
+        panic!("Invalid, can't have cycles in initial");
+    }
+    else {
+        let visit_count = visited.len();
+        println!("Visit Count: {visit_count}");
+    }
+
+    let mut cycle_count: u64 = 0;
+
+    for visit in visited {
+        let mut new_map = map.clone();
+        let (y, x) = visit;
+
+        new_map[y][x] = false;
+
+        let (cycle, _) = simulate(&new_map, &x_in, &y_in);
+
+        if cycle {
+            cycle_count += 1;
+        }
+    }
+
+    println!("Cycle Count: {cycle_count}");
+
+}
+
+fn simulate(map: &Vec<Vec<bool>>, x_in: &usize, y_in: &usize) -> (bool, HashSet<(usize, usize)>) {
+    let mut x = x_in.clone();
+    let mut y = y_in.clone();
     let mut direction: char = 'U';
 
-    let mut visited: HashSet<String> = HashSet::new();
+    let mut visited: HashSet<(usize, usize)> = HashSet::new();
+    let mut history: HashSet<String> = HashSet::new();
 
     loop {
-        visited.insert(format!("{y}|{x}"));  
+        let record = format!("{y}|{x}|{direction}");
+
+        if history.contains(&record) {
+            return (true, visited);
+        }
+        else {
+             visited.insert((y,x));  
+             history.insert(record);
+        }       
 
         let mut can_move = false;
 
         if direction == 'U' {
             if y == 0 {
-                break;
+                return (false, visited);
             }
             can_move = map[y - 1][x];
         }    
         else if direction == 'D' {
             if y == map.len() -1 {
-                break;
+                return (false, visited);
             }
             can_move = map[y + 1][x];
         }   
         else if direction == 'L' {
             if x == 0 {
-                break;
+                return (false, visited);
             }
             can_move = map[y][x - 1];
         }   
         else if direction == 'R' {
             if x == map[0].len() -1 {
-                break;
+                return (false, visited);
             }
             can_move = map[y][x + 1];
         }
@@ -94,7 +135,4 @@ fn main() {
             }
         }        
     }
-   
-    let visited = visited.len();
-    println!("Visit Count: {visited}");
 }
