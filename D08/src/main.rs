@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fs, usize};
+use std::{collections::{HashMap, HashSet}, fs, usize};
 
 fn get_input() -> Vec<Vec<char>> {
 
@@ -20,7 +20,7 @@ enum Movment  {
 
 fn main() {
     let input = get_input();      
-    let mut nodes: HashSet<(isize, isize)> = HashSet::new(); 
+    let mut nodes: HashMap<char, Vec<(isize, isize)>> = HashMap::new(); 
 
     let y_max: isize = input.len().try_into().unwrap();
     let x_max: isize = input[0].len().try_into().unwrap();
@@ -32,104 +32,16 @@ fn main() {
 
             let target: char = input[yu][xu];
 
-            if target == '.' {
-                continue;
+            if target != '.' {
+                let mut node = match nodes.get(&target) {
+                    None => Vec::new(),
+                    x => x.unwrap()
+                };
+
+                node.push((y, x));
+                
+                nodes.insert(target, node);
             }
-
-            //Up Left
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::Minus, Movment::Minus)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
-            //Up
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::Minus, Movment::None)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
-
-            //Up Right
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::Minus, Movment::Plus)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
-
-            //Right
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::None, Movment::Plus)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
-
-            //Down Right
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::Plus, Movment::Plus)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
-
-            //Down
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::Plus, Movment::None)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
-
-            //Down left
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::Plus, Movment::Minus)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
-
-            //Left
-            let node = get_node( 
-                navigate_until_found(target, &input, y, x, y_max, x_max, (Movment::None, Movment::Minus)),
-                y,
-                x, y_max, x_max
-            );
-
-            if node != None {
-                nodes.insert(node.unwrap());
-            }
-
         }
     }
 
@@ -137,7 +49,9 @@ fn main() {
     println!("Antinodes: {node_count}");
 }
 
-fn navigate_until_found(target: char, map: &Vec<Vec<char>>, mut y: isize, mut x:isize, y_max:isize, x_max:isize, transform: (Movment, Movment)) -> Option<(isize, isize)> {
+fn navigate_until_found(target: char, map: &Vec<Vec<char>>, y_in: isize, x_in:isize, y_max:isize, x_max:isize, transform: (Movment, Movment)) -> Option<(isize, isize)> {
+    let mut y = y_in.clone();
+    let mut x = x_in.clone();
     
     match transform.0 {
         Movment::Plus => {
@@ -166,9 +80,8 @@ fn navigate_until_found(target: char, map: &Vec<Vec<char>>, mut y: isize, mut x:
     let yu: usize  = y.try_into().unwrap();
     let xu: usize  = x.try_into().unwrap();
 
-    println!("{yu}-{xu}");
-
     if map[yu][xu] == target {
+        println!("{y}/{x}");
         return Some((y, x));
     } else {
         return navigate_until_found(target, map, y, x, y_max, x_max, transform);
@@ -179,8 +92,8 @@ fn get_node (found: Option<(isize, isize)>, y:isize, x:isize, y_max:isize, x_max
     if found != None {
         let unwrapped = found.unwrap();
 
-        let y_result = y - (y - unwrapped.0);
-        let x_result = x - (x - unwrapped.1);
+        let y_result = unwrapped.0 + (unwrapped.0 - y);
+        let x_result = unwrapped.1 + (unwrapped.1 - x);
 
         if y_result < 0 || y_result > (y_max -1) || x_result < 0 || x_result > (x_max -1) {
             return None;
