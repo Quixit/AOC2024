@@ -15,6 +15,7 @@ fn main() {
     let input = get_input();      
     let mut nodes: HashMap<char, Vec<(isize, isize)>> = HashMap::new();
     let mut antinodes: HashSet<(isize, isize)> = HashSet::new(); 
+    let mut resonant_antinodes: HashSet<(isize, isize)> = HashSet::new(); 
 
     let y_max: isize = input.len().try_into().unwrap();
     let x_max: isize = input[0].len().try_into().unwrap();
@@ -46,10 +47,29 @@ fn main() {
                 {
                     let found = get_node(point_one, point_two, y_max, x_max);
 
+                    resonant_antinodes.insert(point_one);
+                    resonant_antinodes.insert(point_two);
+
                     if found != None {
-                        let found = found.unwrap();
+                        let mut found = found.unwrap();
 
                         antinodes.insert(found); 
+                        resonant_antinodes.insert(found);
+
+                        let mut previous = point_two;
+
+                        loop {
+                            let next = get_node(previous, found, y_max, x_max);
+                            if next == None {
+                               break;
+                            }
+                            else {
+                                previous = found;
+                                found = next.unwrap();
+
+                                resonant_antinodes.insert(found);
+                            }
+                        }
                     }
                 }
             }
@@ -57,7 +77,9 @@ fn main() {
     }
 
     let node_count = antinodes.len();
+    let res_count = resonant_antinodes.len();
     println!("Antinodes: {node_count}");
+    println!("Resonant Antinodes: {res_count}");
 }
 
 fn get_node (from:(isize, isize), to: (isize, isize), y_max:isize, x_max:isize) -> Option<(isize, isize)> {
